@@ -20,17 +20,19 @@
             <div class="mt-5 md:m-10 md:mt-4 overflow-x-auto">
                 
                 @if(session()->has('success'))
-                <div class="bg-green-500 p-5 rounded-lg">
-                    <p class="text-3xl text-white">{{ session()->get('success') }}</p>
+                <div class="bg-green-500 p-5 rounded-lg items-center">
+                    <p class="text-3xl text-white inline-block">{{ session()->get('success') }}</p>
+                    <a href="#" wire:click.prevent="dismissAlert('success')" class="text-white text-3xl inline-block hover:text-slate-500 pull-right">&times;</a>
                 </div>
                 @endif
                 @if(session()->has('failed'))
-                <div class="bg-red-500 p-5 rounded-lg">
-                    <p class="text-3xl text-white">{{ session()->get('failed') }}</p>
+                <div class="bg-green-500 p-5 rounded-lg items-center">
+                    <p class="text-3xl text-white inline-block">{{ session()->get('failed') }}</p>
+                    <a href="#" wire:click.prevent="dismissAlert('failed')" class="text-white text-3xl inline-block hover:text-slate-500 pull-right">&times;</a>
                 </div>
                 @endif
 
-                <table class="table text-2xl mt-10">
+                <table class="table text-xl mt-10">
                     <thead class="bg-gray-500 text-white">
                         <tr>
                             <th>Category Id</th>

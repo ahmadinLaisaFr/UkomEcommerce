@@ -10,9 +10,8 @@
                         <form wire:submit.prevent="update" class="md:space-y-5">
                             @csrf
                             <div class="text-center">
-                                @error('name') <span class="text-red-500 text-center inline">{{ $message }}</span> @enderror
-                                <br>
-                                @error('slug') <span class="text-red-500 text-center inline">{{ $message }}</span> @enderror
+                                @error('name') <span class="text-red-500 text-center inline">{{ $message }}</span> <br> @enderror
+                                @error('slug') <span class="text-red-500 text-center inline">{{ $message }}</span> <br> @enderror
                             </div>
                             <div class="flex flex-col md:flex-row md:items-center md:justify-center">
                                 <label for="name" class="mx-5">Category Name</label>

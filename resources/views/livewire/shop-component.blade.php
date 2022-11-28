@@ -60,11 +60,14 @@
 						<ul class="product-list grid-products equal-container">
 							@foreach ($products as $product)
 								<li class="col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-									<div class="product product-style-3 equal-elem ">
-										<div class="product-thumnail">
-											<a href="{{ route('product.details', ['slug' => $product->slug]) }}" title="{{ $product->name }}">
-												<figure><img src="{{ asset('assets/images/products') }}/{{ $product->image }}" alt="{{ $product->name }}"></figure>
+									<div class="product product-style-3 equal-elem">
+										<div class="product-thumnail mx-auto">
+											<a href="{{ route('product.details', ['slug' => $product->slug]) }}" title="{{ $product->name }}" class="">
+												<figure><img src="{{ asset('assets/images/products') }}/{{ $product->image }}" alt="{{ $product->name }}" style="height: 170px; width: 200px;"></figure>
 											</a>
+										</div>
+										<div class="">
+											<a href="#" wire:click.prevent="addToWishlist({{ $product->id }}, '{{ $product->name }}', {{ $product->regular_price }})"><button class="p-3 hover:bg-red-800 text-white hover:text-gray-200 bg-red-500">Add to wishlist</button></a>
 										</div>
 										<div class="product-info">
 											<a href="{{ route('product.details', ['slug' => $product->slug]) }}" class="product-name"><span>{{ $product->name }}</span></a>
@@ -116,15 +119,10 @@
 						</div>
 					</div><!-- brand widget-->
 
-					<div class="widget mercado-widget filter-widget price-filter">
-						<h2 class="widget-title">Price</h2>
+					<div class="widget mercado-widget filter-widget price-filter py-10">
+						<h2 class="widget-title">Price : ${{ $min_price }} - ${{ $max_price }}</h2>
 						<div class="widget-content">
-							<div id="slider-range"></div>
-							<p>
-								<label for="amount">Price:</label>
-								<input type="text" id="amount" readonly>
-								<button class="filter-submit">Filter</button>
-							</p>
+							<div id="slider" wire:ignore></div>
 						</div>
 					</div><!-- Price-->
 
@@ -227,3 +225,30 @@
 		</div><!--end container-->
 	</main>
 </div>
+
+@push('script')
+	<script>
+		let slider = document.getElementById('slider')
+		let range = {
+			'min': [0],
+			'50%': [500 ],
+			'max': [1000 ]
+		};
+
+		noUiSlider.create(slider, {
+			start : [1, 1000],
+			connect : true,
+			range : range,
+			pips : {
+				mode : 'range',
+				density : 4,
+				stepped : true
+			}
+		})
+
+		slider.noUiSlider.on('update', function (value) {
+			@this.set('min_price', value[0])
+			@this.set('max_price', value[1])
+		})
+	</script>
+@endpush

@@ -14,14 +14,20 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,400italic,700,700italic,900,900italic&amp;subset=latin,latin-ext" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Open%20Sans:300,400,400italic,600,600italic,700,700italic&amp;subset=latin,latin-ext" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/font-awesome.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/flexslider.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/owl.carousel.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chosen.min.css') }}">
+	{{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chosen.min.css') }}"> --}}
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/color-01.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/jquery-datetimepicker/jquery.datetimepicker.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/jqueryconfirm/jquery-confirm.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/nouislider/nouislider.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datetimepicker.css') }}">
 	@vite('resources/css/app.css')
     @livewireStyles
 </head>
@@ -86,8 +92,26 @@
 														<a title="Category" href="{{ route('admin.category') }}">Category</a>
 													</li>
 													<li class="menu-item" >
-														<a title="Category" href="{{ route('admin.product') }}">Product</a>
+														<a title="Product" href="{{ route('admin.product') }}">Product</a>
 													</li>
+													<li class="menu-item" >
+														<a title="Manage Sliders" href="{{ route('admin.sliders') }}">Manage Sliders</a>
+													</li>
+													<li class="menu-item" >
+														<a title="Manage Home Profile" href="{{ route('admin.home.categories') }}">Manage Home Category</a>
+													</li>
+													<li class="menu-item" >
+														<a title="Sale Setting" href="{{ route('admin.sale') }}">Sale Setting</a>
+													</li>
+													<li class="menu-item" >
+														<a title="Manage Couponn" href="{{ route('admin.coupons') }}">Manage Coupons</a>
+													</li>
+													<li class="menu-item" >
+														<a title="All Order" href="{{ route('admin.orders') }}">All Order</a>
+													</li>
+													{{-- <li class="menu-item" >
+														<a title="My Profile" href="{{ route('profile.show') }}">My Profile</a>
+													</li> --}}
 													<li class="menu-item" >
 														<a title="Logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
 													</li>
@@ -102,6 +126,9 @@
 												<ul class="submenu curency" >
 													<li class="menu-item" >
 														<a title="Dashboard" href="{{ route('user.dashboard') }}">Dashboard</a>
+													</li>
+													<li class="menu-item" >
+														<a title="My Profile" href="{{ route('profile.show') }}">My Profile</a>
 													</li>
 													<li class="menu-item" >
 														<a title="Logout" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
@@ -131,26 +158,10 @@
 						@livewire('header-search-component')
 
 						<div class="wrap-icon right-section">
-							<div class="wrap-icon-section wishlist">
-								<a href="#" class="link-direction">
-									<i class="fa fa-heart" aria-hidden="true"></i>
-									<div class="left-info">
-										<span class="index">0 item</span>
-										<span class="title">Wishlist</span>
-									</div>
-								</a>
-							</div>
-							<div class="wrap-icon-section minicart">
-								<a href="{{ route('products.cart') }}" class="link-direction">
-									<i class="fa fa-shopping-basket" aria-hidden="true"></i>
-									<div class="left-info">
-										@if (Cart::count() > 0)
-										<span class="index">{{ Cart::count() }} item</span>
-										@endif
-										<span class="title">CART</span>
-									</div>
-								</a>
-							</div>
+							@livewire('wishlist-count-component')
+							
+							@livewire('cart-count-component')
+							
 							<div class="wrap-icon-section show-up-after-1024">
 								<a href="#" class="mobile-navigation">
 									<span></span>
@@ -205,8 +216,12 @@
 		</div>
 	</header>
 
+	@if (isset($slot))
     {{ $slot }}
-
+	@else
+	@yield('content')
+	@endif
+	
 	<footer id="footer">
 		<div class="wrap-footer-content footer-style-1">
 
@@ -462,7 +477,7 @@
 	</footer>
 	
 	<script src="{{ asset('assets/js/jquery-1.12.4.minb8ff.js?ver=1.12.4') }}"></script>
-	<script src="{{ asset('assets/js/jquery-ui-1.12.4.minb8ff.js?ver=1.12.4') }}"></script>
+	<script src="{{ asset('assets/jqueryui/jquery-ui.js') }}"></script>
 	<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 	<script src="{{ asset('assets/js/jquery.flexslider.js') }}"></script>
 	{{-- <script src="{{ asset('assets/js/chosen.jquery.min.js') }}"></script> --}}
@@ -470,6 +485,15 @@
 	<script src="{{ asset('assets/js/jquery.countdown.min.js') }}"></script>
 	<script src="{{ asset('assets/js/jquery.sticky.js') }}"></script>
 	<script src="{{ asset('assets/js/functions.js') }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="{{ asset('assets/js/select2.min.js') }}"></script>
+	<script src="{{ asset('assets/jquery-datetimepicker/jquery.datetimepicker.full.min.js') }}"></script>	
+	<script src="{{ asset('assets/nouislider/nouislider.min.js') }}"></script>
+	<script src="{{ asset('assets/js/moment.js') }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="{{ asset('assets/jqueryconfirm/jquery-confirm.min.js') }}"></script>
     @livewireScripts
+
+	@stack('script')
 </body>
 </html>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Product;
+use App\Models\Sale;
 use Livewire\Component;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
@@ -24,15 +25,12 @@ class DetailsComponent extends Component
 
     public function render()
     {
-        // instansiasi objek product
         $product = new Product;
         $singleProduct = $product->where('slug', $this->slug)->first();
-        // barang yang akan ditampilkan detail nya
-        $mydata['products'] = $singleProduct;
-        // barang popular
+        $mydata['product'] = $singleProduct;
         $mydata['popular_products'] = $product->inRandomOrder()->limit(4)->get();
-        // barang yang terkait dengan barang yang saat ini ditampilkan
         $mydata['related_products'] = $product->where('category_id', $singleProduct->category_id)->inRandomOrder()->get();
+        $mydata['sale_period'] = Sale::find(1);
         return view('livewire.details-component', $mydata)->layout('layouts.base');
     }
 }

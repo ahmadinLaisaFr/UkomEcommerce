@@ -2,10 +2,6 @@
 	<!--main area-->
 	<main id="main" class="main-site">
 		<div class="container">
-			<select name="tes" id="" wire:model="tes">
-				<option value="select">select</option>
-				<option value="ipsum">ipsum</option>
-			</select>
 			<div class="wrap-breadcrumb">
 				<ul>
 					<li class="item-link"><a href="#" class="link">home</a></li>
@@ -18,8 +14,8 @@
 						<div class="detail-media">
 							<div class="product-gallery">
                                 <ul class="slides">
-										<li data-thumb="{{ asset('assets/images/products') }}/{{ $products->image }}">
-											<img src="{{ asset('assets/images/products') }}/{{ $products->image }}" alt="{{ $products->name }}" />
+										<li data-thumb="{{ asset('assets/images/products') }}/{{ $product->image }}">
+											<img src="{{ asset('assets/images/products') }}/{{ $product->image }}" alt="{{ $product->name }}" />
 										</li>
                                 </ul>
 							</div>
@@ -33,17 +29,23 @@
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <a href="#" class="count-review">(05 review)</a>
                             </div>
-                            <h2 class="product-name">{{ $products->name }}</h2>
-							<h4>category : <a style="color:rgb(255, 40, 50);" href="{{ route('product.category', ['slug' => $products->category->slug]) }}">{{ $products->category->name }}</a></h4>
+                            <h2 class="product-name">{{ $product->name }}</h2>
+							<h4>category : <a style="color:rgb(255, 40, 50);" href="{{ route('product.category', ['slug' => $product->category->slug]) }}">{{ $product->category->name }}</a></h4>
                             <div class="short-desc">
-                                {{ $products->short_desc }}	
+                                {{ $product->short_desc }}	
                             </div>
                             <div class="wrap-social">
                                 <a class="link-socail" href="#"><img src="{{ asset('assets/images/social-list.png') }}" alt=""></a>
                             </div>
-                            <div class="wrap-price"><span class="product-price">${{ $products->regular_price }}</span></div>
+							@if ($product->sale_price > 0 && $sale_period->status == 1 && $sale_period->sale_date > Carbon\Carbon::now())
+                            <div class="wrap-price">
+                                <ins><p class="product-price">${{ $product->sale_price }}</p></ins><del><p class="product-price text-xs">${{ $product->regular_price }}</p></del>
+                            </div>
+							@else
+                            <div class="wrap-price"><span class="product-price">${{ $product->regular_price }}</span></div>
+							@endif
                             <div class="stock-info in-stock">
-                                <p class="availability">Availability: <b>{{ $products->stock_status }}</b></p>
+                                <p class="availability">Availability: <b>{{ $product->stock_status }}</b></p>
                             </div>
                             <div class="quantity">
                                 <span>Quantity:</span>
@@ -55,7 +57,11 @@
 								</div>
 							</div>
 							<div class="wrap-butons">
-								<a href="#" class="btn add-to-cart" wire:click.prevent="store({{ $products->id }}, '{{ $products->name }}', {{ $products->regular_price }})">Add To Cart</a>
+								@if ($product->sale_price > 0 && $sale_period->status == 1 && $sale_period->sale_date > Carbon\Carbon::now())
+								<a href="#" class="btn add-to-cart" wire:click.prevent="store({{ $product->id }}, '{{ $product->name }}', {{ $product->sale_price }})">Add To Cart</a>
+								@else
+								<a href="#" class="btn add-to-cart" wire:click.prevent="store({{ $product->id }}, '{{ $product->name }}', {{ $product->regular_price }})">Add To Cart</a>
+								@endif
                                 <div class="wrap-btn">
                                     <a href="#" class="btn btn-compare">Add Compare</a>
                                     <a href="#" class="btn btn-wishlist">Add Wishlist</a>
@@ -70,7 +76,7 @@
 							</div>
 							<div class="tab-contents">
 								<div class="tab-content-item active" id="description">
-									{{ $products->desc }}
+									{{ $product->desc }}
 								</div>
 								<div class="tab-content-item " id="add_infomation">
 									<table class="shop_attributes">
@@ -242,7 +248,7 @@
 
 								@foreach ($related_products as $rp)
 									@php
-										if($rp->slug == $products->slug) continue;
+										if($rp->slug == $product->slug) continue;
 									@endphp
 									<div class="product product-style-2 equal-elem ">
 										<div class="product-thumnail">

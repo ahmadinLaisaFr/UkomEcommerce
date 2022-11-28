@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'stripe' => [
+        'secret' => 'sk_test_51M3ZbLGBA8d48A5NgOgIciH77zhG2yX7r8ddDSqrf3ivuReZ6jdSGtadXRbPqZ9ZETJUenD7JBuoYGhrdAUicLmB00WyqGWmX2',
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
